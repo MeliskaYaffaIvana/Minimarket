@@ -1,11 +1,10 @@
-@extends('kategori.layout')
+@extends('layouts.app')
 
 @section('content')
 
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-header">
+<div class="media-body">
+        <div class="module">
+            <div class="module-head">
             Edit  Data
             </div>
             <div class="card-body">
@@ -22,12 +21,13 @@
             <form method="post" action="{{ route('kategori.update', $kategori->id) }}" id="myForm">
             @method('PUT')
             @csrf
-
+            <div class="module-body">
                 <div class="form-group">
                     <label for="nama_kategori">Kategori</label>
                     <input type="text" name="nama_kategori" class="form-control" id="nama_kategori" value="{{ $kategori->nama_kategori }}" ariadescribedby="nama_kategori" >
                 </div>
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{{ route('kategori.index') }}" class="btn btn-default">Cancel</a>
             </form> 
             </div>
         </div>

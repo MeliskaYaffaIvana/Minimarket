@@ -102,20 +102,23 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $item = Item::find($id);
-        $item->id = $request->id;
+        $item = Item::with('kategori')
+            ->where('id', $id)
+            ->first();
+
         $item->nama_item = $request->nama_item;
         $item->merk_item = $request->merk_item;
         $item->harga_jual = $request->harga_jual;
         $item->satuan = $request->satuan;
         $item->stock = $request->stock;
 
-        if($item->item_image && file_exist(storage_path('app/public/' . $item->item_image))){
-            Storage::delete('public/' . $item->item_image);
+        if ($request->file('image')){
+            if($item->item_image && file_exist(storage_path('app/public/' . $item->item_image))){
+                Storage::delete('public/' . $item->item_image);
+                $image_name = $request->file('image')->store('images', 'public');
+                $item->item_image = $image_name;
+            }
         }
-        $image_name = $request->file('image')->store('images', 'public');
-        $student->item_image = $image_name;
-        $student->save(); 
 
         $kategori = new Kategori;
         $kategori->id =$request->get('kategori');

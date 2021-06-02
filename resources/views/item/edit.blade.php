@@ -1,14 +1,12 @@
-@extends('item.layout')
+@extends('layouts.app')
 
 @section('content')
 
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-header">
+<div class="media-body">
+        <div class="module">
+            <div class="module-head">
             Edit  Data
             </div>
-            <div class="card-body">
                 @if ($errors->any())
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -22,6 +20,7 @@
             <form method="post" action="{{ route('item.update', $item->id) }}" encytype="multipart/form-data"id="myForm">
             @method('PUT')
             @csrf
+            <div class="module-body">
             <div class="form-group">
                 <label for="nama_item">Nama item</label>
                 <input type="text" name="nama_item" class="form-control" id="nama_item" value="{{ $item->nama_item }}" aria-describedby="nama_item" >
@@ -53,6 +52,7 @@
                     <input type="file" class="form-control" required="required" name="image" id="image" value="{{ $item->item_image}}"></br>
                 </div>
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{{ route('kategori.index') }}" class="btn btn-default">Cancel</a>
             </form> 
             </div>
         </div>

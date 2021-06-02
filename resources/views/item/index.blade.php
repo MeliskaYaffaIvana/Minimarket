@@ -1,28 +1,29 @@
-@extends('kategori.layout')
+@extends('layouts.app')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left mt-2">
-                <h2>DATA ITEM</h2>
+<div class="media-body">
+        <div class="module">
+            <div class="module-head">
+                <h3>DATA ITEM</h3>
             </div>
+            <div class="module-body">
             <div class="float-right my-2">
-                <a class="btn btn-success" href="{{ route('item.create') }}"> Insert Data</a>
+                <a class="btn btn-success pull-right" href="{{ route('item.create') }}"> Insert Data</a>
             </div>
-        </div>
-    </div>
     <form class="form-inline" action="{{ route('item.index') }}" method="GET">
         <div class="input-group">
             <input type="search" class="form-control mr-sm-2" name="search"  aria-label="Search" placeholder="Search Kategori...">
 	        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Search</button>
         </div><p>
-    </form>
+</div>
+<div class="module-body">
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
-    <table class="table table-bordered">
+    <div class="table-responsive">
+        <table class="table">
         <tr>
             <th>No</th>
             <th>Nama item</th>

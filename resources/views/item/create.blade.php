@@ -1,11 +1,9 @@
-@extends('item.layout')
+@extends('layouts.app')
 
 @section('content')
-
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-header">
+<div class="media-body">
+        <div class="module">
+            <div class="module-head">
             Insert item
             </div>
             <div class="card-body">
@@ -21,13 +19,14 @@
         @endif
         <form method="post" action="{{ route('item.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
+        <div class="module-body">
             <div class="form-group">
-                <label for="nama_item">Nama item</label>
-                <input type="text" name="nama_item" class="form-control" id="nama_item" aria-describedby="nama_item" >
+                <label for="nama_item">Nama Item</label>
+                <input type="text" name="nama_item" class="form-control" id="nama_item" aria-describedby="nama_item" placeholder="Nama Item">
             </div>
             <div class="form-group">
-                <label for="merk_item">Merk item</label>
-                <input type="text" name="merk_item" class="form-control" id="merk_item" aria-describedby="merk_item" >
+                <label for="merk_item">Merk Item</label>
+                <input type="text" name="merk_item" class="form-control" id="merk_item" aria-describedby="merk_item" placeholder="Merk" >
             </div>
             <div class="form-group">
                 <label for="kategori">Kategori</label>
@@ -39,15 +38,15 @@
             </div>
             <div class="form-group">
                 <label for="harga_jual">Harga Jual</label>
-                <input type="text" name="harga_jual" class="form-control" id="harga_jual" aria-describedby="harga_jual" >
+                <input type="text" name="harga_jual" class="form-control" id="harga_jual" aria-describedby="harga_jual" placeholder="Harga">
             </div>
             <div class="form-group">
                 <label for="satuan">Satuan</label>
-                <input type="text" name="satuan" class="form-control" id="satuan" aria-describedby="satuan" >
+                <input type="text" name="satuan" class="form-control" id="satuan" aria-describedby="satuan" placeholder="Satuan">
             </div>
             <div class="form-group">
                 <label for="stock">Stock</label>
-                <input type="text" name="stock" class="form-control" id="stock" aria-describedby="stock" >
+                <input type="text" name="stock" class="form-control" id="stock" aria-describedby="stock" placeholder="Stock">
             </div>
             <div class="form-group">
                     <label for="image">Image: </label>

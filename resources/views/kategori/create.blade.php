@@ -1,11 +1,9 @@
-@extends('kategori.layout')
+@extends('layouts.app')
 
 @section('content')
-
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-header">
+<div class="media-body">
+        <div class="module">
+            <div class="module-head">
             Insert Kategori
             </div>
             <div class="card-body">
@@ -21,11 +19,13 @@
         @endif
         <form method="post" action="{{ route('kategori.store') }}" id="myForm">
         @csrf
+        <div class="module-body">
             <div class="form-group">
                 <label for="nama_kategori">kategori</label>
-                <input type="text" name="nama_kategori" class="form-control" id="nama_kategori" aria-describedby="nama_kategori" >
+                <input type="text" name="nama_kategori" class="form-control" id="nama_kategori" aria-describedby="nama_kategori" placeholder="Nama">
             </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{{ route('kategori.index') }}" class="btn btn-default">Cancel</a>
         </form>
         </div>
     </div>
