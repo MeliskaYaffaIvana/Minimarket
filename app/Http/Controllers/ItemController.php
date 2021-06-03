@@ -44,9 +44,18 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_item' => 'required',
+            'merk_item' => 'required',
+            'kategori' => 'required',
+            'harga_jual' => 'required',
+            'satuan' => 'required',
+            'stock' => 'required',
+        ]);
+
         $image_name = new Item;
-        if($request->file('image')){
-            $image_name = $request->file('image')->store('images', 'public');
+        if($request->file('item_image')){
+            $image_name = $request->file('item_image')->store('images/item', 'public');
 
         }
         $item = new Item;
@@ -64,7 +73,7 @@ class ItemController extends Controller
         $item->save();
         
         return redirect()->route('item.index')
-        ->with('success', 'item Succesfully Added');
+        ->with('success', 'Item Succesfully Added');
     }
 
     /**
@@ -102,22 +111,28 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $item = Item::with('kategori')
-            ->where('id', $id)
-            ->first();
+        $request->validate([
+            'nama_item' => 'required',
+            'merk_item' => 'required',
+            'kategori' => 'required',
+            'harga_jual' => 'required',
+            'satuan' => 'required',
+            'stock' => 'required',
+        ]);
 
-        $item->nama_item = $request->nama_item;
-        $item->merk_item = $request->merk_item;
-        $item->harga_jual = $request->harga_jual;
-        $item->satuan = $request->satuan;
-        $item->stock = $request->stock;
-
-        if ($request->file('image')){
-            if($item->item_image && file_exist(storage_path('app/public/' . $item->item_image))){
+        $item = Item::find($id);
+        $item->nama_item = $request->get('nama_item');
+        $item->merk_item = $request->get('merk_item');
+        $item->harga_jual = $request->get('harga_jual');
+        $item->satuan = $request->get('satuan');
+        $item->stock = $request->get('stock');
+        
+        if ($request->file('item_image')){
+            if($item->item_image && file_exists(storage_path('app/public/' . $item->item_image))){
                 Storage::delete('public/' . $item->item_image);
-                $image_name = $request->file('image')->store('images', 'public');
-                $item->item_image = $image_name;
             }
+                $image_name = $request->file('item_image')->store('images/item', 'public');
+                $item->item_image = $image_name;
         }
 
         $kategori = new Kategori;
@@ -127,7 +142,7 @@ class ItemController extends Controller
         $item->save();
 
         return redirect()->route('item.index')
-        ->with('success', 'item Succesfully Updated');
+        ->with('success', 'Item Succesfully Updated');
     }
 
     /**
@@ -138,8 +153,8 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        item::find($id)->delete();
+        Item::find($id)->delete();
         return redirect()->route('item.index')
-        ->with('success', 'item Successfully Deleted');
+        ->with('success', 'Item Successfully Deleted');
     }
 }

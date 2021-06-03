@@ -68,12 +68,10 @@
                             <ul class="widget widget-menu unstyled">
                                 <li class="active"><a href="index.html"><i class="menu-icon icon-dashboard"></i>Dashboard
                                 </a></li>
-                                <li><a href="{{route('kategori.index')}}"><i class="menu-icon icon-active"></i>Categories </a>
+                                <li><a href="{{route('kategori.index')}}"><i class="menu-icon icon-bullhorn"></i>Categories </a>
                                 </li>
                                 <li><a href="{{route('item.index')}}"><i class="menu-icon icon-inbox"></i>Items</a></li>
-                                <li><a href="task.html"><i class="menu-icon icon-tasks"></i>Supplier</a></li>
-                                <li><a href="ui-button-icon.html"><i class="menu-icon icon-bold"></i> Buttons </a></li>
-                                <li><a href="ui-typography.html"><i class="menu-icon icon-book"></i>Typography </a></li>
+                                <li><a href="t{{route('supplier.index')}}"><i class="menu-icon icon-tasks"></i>Supplier</a></li>
                                 <li><a href="form.html"><i class="menu-icon icon-paste"></i>Forms </a></li>
                                 <li><a href="table.html"><i class="menu-icon icon-table"></i>Tables </a></li>
                                 <li><a href="charts.html"><i class="menu-icon icon-bar-chart"></i>Charts </a></li>

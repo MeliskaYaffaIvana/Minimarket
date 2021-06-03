@@ -13,7 +13,7 @@
                         <form class="form-inline" action="{{ route('kategori.index') }}" method="GET">
                             <div class="input-group">
                             <input type="search" class="form-control mr-sm-2" name="search"  aria-label="Search" placeholder="Search Kategori...">
-	                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Search</button>
+	                        <button class="btn " type="btn" ><i class="icon-search"></i></button>
                     </div><p>
                 </div>
     <div class="module-body">
@@ -31,9 +31,10 @@
             <th>Tanggal Input</th>
             <th>Action</th>
         </tr>
+        <?php $no = 1; ?>
         @foreach ($kategori as $ktg)
         <tr>
-            <td>{{ $ktg ->id }}</td>
+            <td>{{ $no++ }}</td>
             <td>{{ $ktg ->nama_kategori }}</td>
             <td>{{ $ktg ->created_at}}</td>
             <td>

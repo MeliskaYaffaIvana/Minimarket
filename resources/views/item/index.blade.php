@@ -13,7 +13,7 @@
     <form class="form-inline" action="{{ route('item.index') }}" method="GET">
         <div class="input-group">
             <input type="search" class="form-control mr-sm-2" name="search"  aria-label="Search" placeholder="Search Kategori...">
-	        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Search</button>
+	        <button class="btn " type="btn" ><i class="icon-search"></i></button>
         </div><p>
 </div>
 <div class="module-body">
@@ -35,9 +35,10 @@
             <th>Image</th>
             <th width="280px">Action</th>
         </tr>
+        <?php $no = 1; ?>
         @foreach ($item as $itm)
         <tr>
-            <td>{{ $itm ->id}}</td>
+            <td>{{ $no++}}</td>
             <td>{{ $itm ->nama_item}}</td>
             <td>{{ $itm ->merk_item }}</td>
             <td>{{ $itm ->kategori['nama_kategori'] }}</td>

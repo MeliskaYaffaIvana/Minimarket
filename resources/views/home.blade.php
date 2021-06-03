@@ -69,7 +69,7 @@
                                 <li class="active"><a href="index.html"><i class="menu-icon icon-dashboard"></i>Dashboard  </a></li>
                                 <li><a href="{{route('kategori.index')}}"><i class="menu-icon icon-bullhorn"></i>Categories </a></li>
                                 <li><a href="{{route('item.index')}}"><i class="menu-icon icon-inbox"></i>Items  </a></li>
-                                <li><a href="task.html"><i class="menu-icon icon-tasks"></i>Supplier  </a></li>
+                                <li><a href="{{route('supplier.index')}}"><i class="menu-icon icon-tasks"></i>Supplier  </a></li>
                                 <li><a href="form.html"><i class="menu-icon icon-paste"></i>Forms </a></li>
                                 <li><a href="table.html"><i class="menu-icon icon-table"></i>Tables </a></li>
                                 <li><a href="charts.html"><i class="menu-icon icon-bar-chart"></i>Charts </a></li>

@@ -49,10 +49,11 @@
                 <input type="text" name="stock" class="form-control" id="stock" aria-describedby="stock" placeholder="Stock">
             </div>
             <div class="form-group">
-                    <label for="image">Image: </label>
-                    <input type="file" class="form-control" required="required" name="image" id="image"></br>
+                    <label for="item_image">Image: </label>
+                    <input type="file" class="form-control" required="required" name="item_image" id="item_image"></br>
             </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{{ route('item.index') }}" class="btn btn-default">Cancel</a>
         </form>
         </div>
     </div>

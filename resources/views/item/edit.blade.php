@@ -17,7 +17,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('item.update', $item->id) }}" encytype="multipart/form-data"id="myForm">
+            <form method="post" action="{{ route('item.update', $item->id) }}" enctype="multipart/form-data"id="myForm">
             @method('PUT')
             @csrf
             <div class="module-body">
@@ -48,8 +48,9 @@
                 <input type="text" name="stock" class="form-control" id="stock" value="{{ $item->stock }}" aria-describedby="stock" >
             </div>
             <div class="form-group">
-                    <label for="image">Image: </label>
-                    <input type="file" class="form-control" required="required" name="image" id="image" value="{{ $item->item_image}}"></br>
+                    <label for="item_image">Image: </label>
+                    <input type="file" class="form-control" required="required" name="item_image" id="item_image" value="{{ $item->item_image}}"></br>
+                    <img width="150px" src="{{asset('storage/'.$item->item_image)}}">
                 </div>
             <button type="submit" class="btn btn-primary">Submit</button>
             <a href="{{ route('kategori.index') }}" class="btn btn-default">Cancel</a>
