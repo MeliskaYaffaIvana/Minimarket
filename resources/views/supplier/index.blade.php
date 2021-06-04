@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.all')
 
 @section('content')
     <div class="media-body">
@@ -45,7 +45,7 @@
             <td>{{ $supplier ->nama_perusahaan }}</td>
             <td>{{ $supplier ->no_phone }}</td>
             <td>{{ $supplier ->alamat }}</td>
-            <td>{{ $supplier ->Kota }}</td>
+            <td>{{ $supplier ->kota }}</td>
             <td>{{ $supplier ->provinsi}}</td>
             <td>{{ $supplier ->negara}}</td>
             <td>{{ $supplier ->kode_pos }}</td>

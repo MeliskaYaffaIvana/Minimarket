@@ -21,3 +21,10 @@ Route::get('/', function () {
 Route::resource('kategori', KategoriController::class);
 Route::resource('item', ItemController::class);
 Route::resource('supplier', SupplierController::class);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
