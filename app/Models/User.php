@@ -2,42 +2,69 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Eloquent as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * @package App\Models
+ * @version June 25, 2019, 7:15 am UTC
+ *
+ * @property string name
+ * @property string email
+ * @property string|\Carbon\Carbon email_verified_at
+ * @property string password
+ * @property string remember_token
+ */
+class User extends Model
 {
-    use HasFactory, Notifiable;
+    // use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
+    public $table = 'users';
+    
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
+
+    // protected $dates = ['deleted_at'];
+
+
+    public $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
+        'remember_token'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be casted to native types.
      *
      * @var array
      */
     protected $casts = [
+        'id' => 'integer',
+        'name' => 'string',
+        'email' => 'string',
         'email_verified_at' => 'datetime',
+        'password' => 'string',
+        'remember_token' => 'string'
     ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name' => 'required',
+        'email' => 'required',
+        'password' => 'required'
+    ];
+
+   
+    public function purchase()
+   {
+       return $this->hasMany('App\Models\Puschase');
+   } 
 }

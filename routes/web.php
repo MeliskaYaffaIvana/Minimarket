@@ -1,9 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\SupplierController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,13 +14,37 @@ use App\Http\Controllers\SupplierController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('kategori', KategoriController::class);
-Route::resource('item', ItemController::class);
-Route::resource('supplier', SupplierController::class);
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+ Route::middleware('auth')->group(function(){
+
+Route::get('/home', 'HomeController@index');
+
+// Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::resource('categories', 'CategoryController');
+Route::resource('items', 'ItemController');
+Route::get('item/{id}', 'ItemController@search');
+Route::resource('customers', 'CustomerController');
+Route::resource('suppliers', 'SupplierController');
+Route::resource('users', 'UserController');
+Route::resource('purchases', 'PurchaseController');
+Route::get('purchases/pdf/{id}', 'PurchaseController@print')->name('purchases.pdf');
+
+Route::resource('sales', 'SaleController');
+Route::get('sales/pdf/{id}', 'SaleController@print')->name('sales.pdf');
+
+// Route::get('/sales/{id}/pdf', 'SaleController@cetak_pdf');
+ });
+
+
+
+
+
+
+Route::resource('penilaians', 'penilaianController');
+
+Route::resource('cobas', 'cobaController');

@@ -1,125 +1,156 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Supplier;
 
+use App\Http\Requests\CreateSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
+use App\Repositories\SupplierRepository;
+use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use Flash;
+use Response;
 
-class SupplierController extends Controller
+class SupplierController extends AppBaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    /** @var  SupplierRepository */
+    private $supplierRepository;
+
+    public function __construct(SupplierRepository $supplierRepo)
     {
-        $search = request()->query('search');
-        if($search){
-            $supplier = Supplier::where('nama_perusahaan', "like", "%{$search}%")
-            ->orWhere('kota', "like", "%{$search}%")
-            ->paginate(3);
-        }else {
-            $supplier = Supplier::all();
-        }
-        return view('supplier.index', ['supplier' => $supplier]);
+        $this->supplierRepository = $supplierRepo;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the Supplier.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $suppliers = $this->supplierRepository->all();
+
+        return view('suppliers.index')
+            ->with('suppliers', $suppliers);
+    }
+
+    /**
+     * Show the form for creating a new Supplier.
+     *
+     * @return Response
      */
     public function create()
     {
-        return view('supplier.create');
+        return view('suppliers.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Supplier in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateSupplierRequest $request
+     *
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateSupplierRequest $request)
     {
-        $request->validate([
-            'nama_perusahaan' => 'required',
-            'no_phone' => 'required',
-            'alamat' => 'required',
-            'kota' => 'required',
-            'provinsi' => 'required',
-            'negara' => 'required',
-            'kode_pos' => 'required',
-            'fax' => 'required',
-            'email' => 'required',
-        ]);
-        Supplier::create($request->all());
+        $input = $request->all();
 
-        return redirect()->route('supplier.index')
-        ->with('success', 'Supplier Succesfully Added');
+        $supplier = $this->supplierRepository->create($input);
+
+        Flash::success('Supplier saved successfully.');
+
+        return redirect(route('suppliers.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified Supplier.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function show($id)
     {
-        $supplier = Supplier::find($id);
-        return view('supplier.detail', compact('supplier'));
+        $supplier = $this->supplierRepository->find($id);
+
+        if (empty($supplier)) {
+            Flash::error('Supplier not found');
+
+            return redirect(route('suppliers.index'));
+        }
+
+        return view('suppliers.show')->with('supplier', $supplier);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified Supplier.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function edit($id)
     {
-        $supplier = Supplier::find($id);
-        return view('supplier.edit', ['supplier' =>$supplier]);
+        $supplier = $this->supplierRepository->find($id);
+
+        if (empty($supplier)) {
+            Flash::error('Supplier not found');
+
+            return redirect(route('suppliers.index'));
+        }
+
+        return view('suppliers.edit')->with('supplier', $supplier);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified Supplier in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateSupplierRequest $request
+     *
+     * @return Response
      */
-    public function update(Request $request, $id)
+    public function update($id, UpdateSupplierRequest $request)
     {
-        $request->validate([
-            'nama_perusahaan' => 'required',
-            'no_phone' => 'required',
-            'alamat' => 'required',
-            'kota' => 'required',
-            'provinsi' => 'required',
-            'negara' => 'required',
-            'kode_pos' => 'required',
-            'fax' => 'required',
-            'email' => 'required',
-        ]);
-        Supplier::find($id)->update($request->all());
+        $supplier = $this->supplierRepository->find($id);
 
-        return redirect()->route('supplier.index')
-        ->with('success', 'Supplier Succesfully Updated');
+        if (empty($supplier)) {
+            Flash::error('Supplier not found');
+
+            return redirect(route('suppliers.index'));
+        }
+
+        $supplier = $this->supplierRepository->update($request->all(), $id);
+
+        Flash::success('Supplier updated successfully.');
+
+        return redirect(route('suppliers.index'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Supplier from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @throws \Exception
+     *
+     * @return Response
      */
     public function destroy($id)
     {
-        Supplier::find($id)->delete();
-        return redirect()->route('supplier.index')
-        ->with('success', 'Supplier Successfully Deleted');
+        $supplier = $this->supplierRepository->find($id);
+
+        if (empty($supplier)) {
+            Flash::error('Supplier not found');
+
+            return redirect(route('suppliers.index'));
+        }
+
+        $supplier = $this->supplierRepository->delete($id);
+
+        Flash::success('Supplier deleted successfully.');
+
+        return redirect(route('suppliers.index'));
     }
 }

@@ -1,160 +1,191 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Item;
-use App\Models\Kategori;
+
+use App\Http\Requests\CreateItemRequest;
+use App\Http\Requests\UpdateItemRequest;
+use App\Repositories\ItemRepository;
+use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Storage;
-class ItemController extends Controller
+use Flash;
+use Response;
+
+use File;
+use Carbon\Carbon;
+use Auth;
+
+class ItemController extends AppBaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    /** @var  ItemRepository */
+    private $itemRepository;
+
+    public function __construct(ItemRepository $itemRepo)
     {
-        $search = request()->query('search');
-        if($search){
-            $item = Item::with('kategori')->where('nama_item', "like", "%{$search}%")
-                ->orWhere('merk_item', "like", "%{$search}%")
-            ->paginate(3);
-        }else {
-            $item = Item::with('kategori')->get();
-        }
-        return view('item.index', ['item' => $item]);
+        $this->itemRepository = $itemRepo;
+         $this->path = public_path('images');
+    }
+
+
+
+    /**
+     * Display a listing of the Item.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $items = $this->itemRepository->all();
+
+        return view('items.index')
+            ->with('items', $items);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Item.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
-        $kategori = Kategori::all();
-        return view('item.create', ['kategori' => $kategori]);
+        $categories = \App\Models\Category::pluck('nama','id');
+        return view('items.create')->with(compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Item in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateItemRequest $request
+     *
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateItemRequest $request)
     {
-        $request->validate([
-            'nama_item' => 'required',
-            'merk_item' => 'required',
-            'kategori' => 'required',
-            'harga_jual' => 'required',
-            'satuan' => 'required',
-            'stock' => 'required',
-        ]);
+        $input = $request->all();
 
-        $image_name = new Item;
-        if($request->file('item_image')){
-            $image_name = $request->file('item_image')->store('images/item', 'public');
+        //JIKA FOLDERNYA BELUM ADA
+       if (!File::isDirectory($this->path)) {
+           //MAKA FOLDER TERSEBUT AKAN DIBUAT
+           File::makeDirectory($this->path);
+       }
 
-        }
-        $item = new Item;
-        $item->nama_item = $request->get('nama_item');
-        $item->merk_item = $request->get('merk_item');
-        $item->harga_jual = $request->get('harga_jual');
-        $item->satuan = $request->get('satuan');
-        $item->stock = $request->get('stock');
-        $item->item_image = $image_name;
+       //MENGAMBIL FILE IMAGE DARI FORM INPUT TYPE FILE NAME images
+       $file = $request->file('picture');
 
-        $kategori = new Kategori;
-        $kategori->id =$request->get('kategori');
+       //MEMBUAT NAME FILE DARI GABUNGAN TIMESTAMP DAN UNIQID()
+       $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+       //UPLOAD FILE
+         $file->move($this->path, $fileName);
 
-        $item->kategori()->associate($kategori);
-        $item->save();
-        
-        return redirect()->route('item.index')
-        ->with('success', 'Item Succesfully Added');
+        //SIMPAN DATA IMAGE YANG TELAH DI-UPLOAD pada TABLE
+       $input = $request->all();
+       $input['user_id']=Auth::user()->id;
+       $input['picture']=$fileName;
+
+       $item = $this->itemRepository->create($input);
+
+        Flash::success('Item saved successfully.');
+
+        return redirect(route('items.index'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified Item.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function show($id)
     {
-        $item = Item::find($id);
-        return view('item.detail', compact('item'));
+        $item = $this->itemRepository->find($id);
+
+        if (empty($item)) {
+            Flash::error('Item not found');
+
+            return redirect(route('items.index'));
+        }
+
+        return view('items.show')->with('item', $item);
     }
 
     /**
-     * Show the form for editing the spe
-     * cified resource.
+     * Show the form for editing the specified Item.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *
+     * @return Response
      */
     public function edit($id)
     {
-        $item = Item::with('kategori')->where('id', $id)->first();
-        $kategori = Kategori::all();
-        return view('item.edit', compact('item', 'kategori'));
-    }
+        $item = $this->itemRepository->find($id);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama_item' => 'required',
-            'merk_item' => 'required',
-            'kategori' => 'required',
-            'harga_jual' => 'required',
-            'satuan' => 'required',
-            'stock' => 'required',
-        ]);
+        $categories = \App\Models\Category::pluck('nama','id');
 
-        $item = Item::find($id);
-        $item->nama_item = $request->get('nama_item');
-        $item->merk_item = $request->get('merk_item');
-        $item->harga_jual = $request->get('harga_jual');
-        $item->satuan = $request->get('satuan');
-        $item->stock = $request->get('stock');
-        
-        if ($request->file('item_image')){
-            if($item->item_image && file_exists(storage_path('app/public/' . $item->item_image))){
-                Storage::delete('public/' . $item->item_image);
-            }
-                $image_name = $request->file('item_image')->store('images/item', 'public');
-                $item->item_image = $image_name;
+        if (empty($item)) {
+            Flash::error('Item not found');
+
+            return redirect(route('items.index'));
         }
 
-        $kategori = new Kategori;
-        $kategori->id =$request->get('kategori');
-
-        $item->kategori()->associate($kategori);
-        $item->save();
-
-        return redirect()->route('item.index')
-        ->with('success', 'Item Succesfully Updated');
+        return view('items.edit')->with(compact('categories','item'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Update the specified Item in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateItemRequest $request
+     *
+     * @return Response
+     */
+    public function update($id, UpdateItemRequest $request)
+    {
+        $item = $this->itemRepository->find($id);
+
+        if (empty($item)) {
+            Flash::error('Item not found');
+
+            return redirect(route('items.index'));
+        }
+
+        $item = $this->itemRepository->update($request->all(), $id);
+
+        Flash::success('Item updated successfully.');
+
+        return redirect(route('items.index'));
+    }
+
+    /**
+     * Remove the specified Item from storage.
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     *
+     * @return Response
      */
     public function destroy($id)
     {
-        Item::find($id)->delete();
-        return redirect()->route('item.index')
-        ->with('success', 'Item Successfully Deleted');
+        $item = $this->itemRepository->find($id);
+
+        if (empty($item)) {
+            Flash::error('Item not found');
+
+            return redirect(route('items.index'));
+        }
+
+        $item = $this->itemRepository->delete($id);
+
+        Flash::success('Item deleted successfully.');
+
+        return redirect(route('items.index'));
+    }
+
+    public function search($id)
+    {
+        $item = $this->itemRepository->find($id);
+        return $item;
     }
 }

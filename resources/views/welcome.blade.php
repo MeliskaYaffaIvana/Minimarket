@@ -81,9 +81,9 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Minimarket
+                    DreaMarket
                 </div>
-                </div>
+
             </div>
         </div>
     </body>
