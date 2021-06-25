@@ -18,7 +18,7 @@
             <td>{!! $item->price !!}</td>
             <td>{!! $item->description !!}</td>
             <td>{!! $item->stock !!}</td>
-            <td>{!! $item->picture !!}</td>
+            <td><img src="{{ asset('images').'/'.$item->picture }}" width="100" height="100"></td>
             <td>{!! $item->category_id !!}</td>
                 <td>
                     {!! Form::open(['route' => ['items.destroy', $item->id], 'method' => 'delete']) !!}
